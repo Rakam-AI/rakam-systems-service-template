@@ -27,7 +27,7 @@ TEST_MODE = True
 if DEBUG:
     ALLOWED_HOSTS = ["*"]
 else:
-    ALLOWED_HOSTS = ["..."]
+    ALLOWED_HOSTS = ["*"]
 
 LOGGING = {
     "version": 1,
@@ -82,9 +82,7 @@ MIDDLEWARE = [
 
 REST_FRAMEWORK = {
     "DEFAULT_RENDERER_CLASSES": ("rest_framework.renderers.JSONRenderer",),
-    "DEFAULT_AUTHENTICATION_CLASSES": (
-        "api_auth.authentication.CustomJWTAuthentication",
-    ),
+    "DEFAULT_AUTHENTICATION_CLASSES": (),
     "DEFAULT_PERMISSION_CLASSES": (),
 }
 
@@ -107,10 +105,10 @@ KEYS_DIR = os.path.join(BASE_DIR, "api_auth", "keys")
 INTERNAL_BASE_URL = (
     "http://localhost:8000/api/auth/"
     if TEST_MODE
-    else "http://lemon-ai-generation-balancer-107125029.eu-west-3.elb.amazonaws.com/api/auth/"
+    else ""
 )
-EXTERNAL_API_URL = "https://api.preprod.lemonapp.lemonlearning.tech/"
-EXTERNAL_AUTH_URL = "https://auth.preprod.lemonapp.lemonlearning.tech/"
+EXTERNAL_API_URL = ""
+EXTERNAL_AUTH_URL = ""
 
 JWKS_FILE_NAME = ".well-known/jwks.json"
 
@@ -118,7 +116,7 @@ AUTH_CONFIG = {
     "C2S": {
         "auth": {
             "type": "JWK",
-            "link": EXTERNAL_AUTH_URL + "realms/lemonapp/protocol/openid-connect/certs",
+            "link": EXTERNAL_AUTH_URL + "",
         },
         "sign": {
             "type": None,
@@ -139,7 +137,7 @@ AUTH_CONFIG = {
             "ORGANIZATION_TOKEN": (
                 "866959ea84cefbc0fc185ecd124126aed8d6a4bb209a4865c28e94695db1e34d",
             ),
-            "URL": "https://staging.ai.lingueo.com/o/token/",
+            "URL": "",
         },
     },
     "S2S_INTERNAL": {"type": "JWKS", "link": INTERNAL_BASE_URL + JWKS_FILE_NAME},

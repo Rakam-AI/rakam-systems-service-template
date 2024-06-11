@@ -1,0 +1,65 @@
+# Python specific
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+*.so
+
+# Django specific
+*.log
+*.pot
+*.py[cod]
+*.sqlite3
+*.pdb
+*.egg-info/
+local_settings.py
+
+# Environments
+.env
+*.env
+*.venv
+venv/
+ENV/
+env/
+env.bak/
+venv.bak/
+
+# VS Code
+.vscode/
+.vscode/*
+
+# PyCharm
+.idea/
+.idea/*
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# Static and media files
+staticfiles/
+media/
+
+# Migrations
+*/migrations/__pycache__
+*/migrations/*.py[cod]
+
+# Coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+
+# Testing
+.pytest_cache/
+.pytest_cache/*
+
+# Build
+build/
+dist/

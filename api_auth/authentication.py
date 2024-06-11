@@ -118,6 +118,7 @@ def generate_signature(auth_config: dict, request=None) -> dict:
 
             # GENERATE OAUTH HEADER
             header["Authorization"] = 'Bearer ' + token
+            header["organization-token"] = settings.AUTH_CONFIG["S2S"]["sign"]["ORGANIZATION_TOKEN"]
         except FileNotFoundError:
             logging.error("Token file %s not found. Generating a new token.", oauth_token_path)
             token = retrieve_oauth_token(oauth_setting=settings.AUTH_CONFIG["S2S"]["sign"])
@@ -134,7 +135,7 @@ class CustomJWTAuthentication(authentication.BaseAuthentication):
     def authenticate(self, request):
         auth_header = authentication.get_authorization_header(request).split()
         if not auth_header or auth_header[0].lower() != b'bearer':
-            return None
+            raise drf_exceptions.AuthenticationFailed('No authentication token provided.')
 
         if len(auth_header) != 2:
             raise drf_exceptions.AuthenticationFailed('Invalid token header.')
@@ -146,8 +147,8 @@ class CustomJWTAuthentication(authentication.BaseAuthentication):
 
         # Iterate over the JWKS URLs
         jwks_urls = {
-            'C2S' : settings.AUTH_CONFIG['C2S']["auth"]["link"],
-            'S2S' : settings.AUTH_CONFIG['S2S']["auth"]["link"],
+            # 'C2S' : settings.AUTH_CONFIG['C2S']["auth"]["link"],
+            # 'S2S' : settings.AUTH_CONFIG['S2S']["auth"]["link"],
             'S2S_INTERNAL' : settings.AUTH_CONFIG['S2S_INTERNAL']["link"]
         }
         for jwks_url in jwks_urls.values():
