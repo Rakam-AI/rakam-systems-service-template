@@ -82,7 +82,9 @@ MIDDLEWARE = [
 
 REST_FRAMEWORK = {
     "DEFAULT_RENDERER_CLASSES": ("rest_framework.renderers.JSONRenderer",),
-    "DEFAULT_AUTHENTICATION_CLASSES": (),
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "api_auth.authentication.CustomJWTAuthentication",
+    ),
     "DEFAULT_PERMISSION_CLASSES": (),
 }
 
@@ -140,7 +142,7 @@ AUTH_CONFIG = {
             "URL": "",
         },
     },
-    "S2S_INTERNAL": {"type": "JWKS", "link": INTERNAL_BASE_URL + JWKS_FILE_NAME},
+    "S2S_INTERNAL": {"type": "JWK", "link": INTERNAL_BASE_URL + JWKS_FILE_NAME},
 }
 
 KEYS_DIR = os.path.join(BASE_DIR, "api_auth", "keys")
