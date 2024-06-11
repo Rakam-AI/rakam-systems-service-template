@@ -101,7 +101,7 @@ def generate_signature(auth_config: dict, request=None) -> dict:
             algorithm=settings.ALGORITHM,
             kid=settings.KID,
         )
-        header["Authorization"] = token
+        header["Authorization"] = f'Bearer {token}'
 
     elif auth_config["type"] == "OAUTH":
         # RETRIEVE TOKEN FILE
