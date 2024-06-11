@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  web:
+    build: .
+    command: bash -c "sleep 6 && 
+      python /django_application/manage.py makemigrations &&
+      python /django_application/manage.py migrate && 
+      python /django_application/manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/django_application 
+    ports:
+      - "8000:8000"
+    working_dir: /django_application
+    environment:
+      - TEST_MODE=true
+      - DEBUG=false

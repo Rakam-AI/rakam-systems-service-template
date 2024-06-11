@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  web:
+    build: .
+    command: bash -c "
+      gunicorn server.wsgi:application \
+      --bind 0.0.0.0:8000 \
+      --workers 2 \
+      --timeout 300 \
+      --worker-class gthread \
+      --threads 4 \
+      --log-level info \
+      --access-logfile - \
+      --error-logfile -"
+    volumes:
+      - .:/django_application 
+    ports:
+      - "8000:8000"
+    environment:
+      - TEST_MODE=false
+      - DEBUG=false
