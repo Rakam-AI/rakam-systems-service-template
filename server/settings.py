@@ -86,20 +86,8 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": (),
 }
 
-
-TEST_PRIVATE_KEY_PATH = os.path.join(
-    BASE_DIR, "api_auth/keys/private_key_external_test.pem"
-)
-TEST_KID = "feab7cf7f0bcb751238dde7a862126b76c1e0f3d7939e11a5477f103f27039c9"
-
-PRIVATE_KEY_PATH = os.path.join(BASE_DIR, "api_auth/keys/private_key_external_test.pem")
-KID = "feab7cf7f0bcb751238dde7a862126b76c1e0f3d7939e11a5477f103f27039c9"
-
-JWKS_FILE_PATH = os.path.join(BASE_DIR, "api_auth", "keys", "jwks.json")
-
 ALGORITHM = "RS256"
 
-KEYS_DIR = os.path.join(BASE_DIR, "api_auth", "keys")
 
 
 INTERNAL_BASE_URL = (
@@ -107,26 +95,10 @@ INTERNAL_BASE_URL = (
     if TEST_MODE
     else ""
 )
-EXTERNAL_API_URL = ""
-EXTERNAL_AUTH_URL = ""
-
-JWKS_FILE_NAME = ".well-known/jwks.json"
 
 AUTH_CONFIG = {
-    "C2S": {
-        "auth": {
-            "type": "JWK",
-            "link": EXTERNAL_AUTH_URL + "",
-        },
-        "sign": {
-            "type": None,
-        },
-    },
+
     "S2S": {
-        "auth": {
-            "type": "JWK",
-            "link": EXTERNAL_API_URL + JWKS_FILE_NAME,
-        },
         "sign": {
             "type": "OAUTH",
             "CLIENT_ID": "BvMidR0TCQxp5QwI4bCiv69eA5cbPdF4ArjEI0jj",
@@ -139,11 +111,9 @@ AUTH_CONFIG = {
             ),
             "URL": "",
         },
-    },
-    "S2S_INTERNAL": {"type": "JWK", "link": INTERNAL_BASE_URL + JWKS_FILE_NAME},
+    }
 }
 
-KEYS_DIR = os.path.join(BASE_DIR, "api_auth", "keys")
 
 # -----
 
@@ -177,27 +147,3 @@ DATABASES = {
     }
 }
 
-# Internationalization
-# https://docs.djangoproject.com/en/2.2/topics/i18n/
-
-# Sets the default language code for your Django project.
-# In this case, it is set to 'en-us' which stands for English (United States).
-LANGUAGE_CODE = "en-us"
-
-# Sets the default time zone for your Django project.
-# In this case, it is set to 'UTC' which stands for Coordinated Universal Time.
-TIME_ZONE = "UTC"
-
-# Enables or disables internationalization.
-# When set to True, Django will use translation catalogs
-# to translate strings into the user's preferred language.
-USE_I18N = True
-
-# Enables or disables localization.
-# When set to True, Django will format dates, numbers, and times according to the user's locale.
-USE_L10N = True
-
-# Enables or disables time zone support.
-# When set to True, Django will store datetime objects in UTC
-# and convert them to the user's local time zone as needed.
-USE_TZ = True

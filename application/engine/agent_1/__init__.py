@@ -3,7 +3,7 @@
 # import json
 # import openai
 
-from . import config
+from . import agent_config
 
 # # Configure OpenAI
 # openai.organization = config.OPEN_AI_ORG

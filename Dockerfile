@@ -1,5 +1,5 @@
 # Use an official NVIDIA CUDA base image
-FROM python:3.8
+FROM python:3.10
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -10,7 +10,7 @@ LABEL maintainer="jean@rakam.ai" \
 # Set the working directory inside the container
 WORKDIR /application
 
-# Install system packages and Python. 
+# Install system packages and Python.
 RUN apt-get update
 
 RUN apt-get install -y --no-install-recommends \
@@ -20,17 +20,17 @@ RUN apt-get install -y --no-install-recommends \
 
 RUN apt-get clean
 
-RUN rm -rf /var/lib/apt/lists/* 
+RUN rm -rf /var/lib/apt/lists/*
 
 RUN ln -s /usr/bin/python3.8 /usr/bin/python || true && \
-    ln -s /usr/bin/pip3 /usr/bin/pip || true 
+    ln -s /usr/bin/pip3 /usr/bin/pip || true
 
 # Copy your requirements file into the container
 COPY requirements.txt .
 
 # Upgrade pip and install required python packages
 RUN pip install --upgrade pip && \
-    pip install -r requirements.txt 
+    pip install -r requirements.txt
 
 # Copy the rest of the application code into the container.
 COPY . .
