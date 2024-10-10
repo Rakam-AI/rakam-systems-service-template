@@ -16,7 +16,6 @@ def test_response(request):
     return Response(base_response, status=200)
 
 
-
 # @api_view(["POST"])
 # def dummy_endpoint(request):
 #     """
@@ -28,4 +27,3 @@ def test_response(request):
 #     }
 
 #     return Response(base_response, status=200)
-
