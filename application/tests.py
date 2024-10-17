@@ -15,4 +15,4 @@ class CustomAgentTestCase(TestCase):
 
         # Execute the action and check the result
         result = action.execute()
-        self.assertEqual(result, "Dummy")
+        self.assertEqual(result, "Dummy Action Executed")

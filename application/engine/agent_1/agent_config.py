@@ -8,7 +8,7 @@ dotenv.load_dotenv()
 # Import the necessary components from the rakam_systems library
 from rakam_systems.components.agents.agents import Agent, Action
 from rakam_systems.components.agents.actions import RAGGeneration, GenericLLMResponse
-from rakam_systems.components.vector_search.vector_store import VectorStores
+from rakam_systems.components.vector_search.vector_store import VectorStore
 from application.engine.agent_1.prompts import PLACEHOLDER_SYS_PROMPT
 
 # Placeholder system prompt
@@ -36,7 +36,7 @@ class CustomAgent(Agent):
         Initialize the agent with the given model and API key.
         Set up all the necessary actions for the agent.
         """
-        super().__init__(model, api_key)
+        super().__init__(model)
 
         # TODO: setup actions
         self.actions = {
