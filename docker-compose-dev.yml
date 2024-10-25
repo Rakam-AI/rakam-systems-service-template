@@ -4,8 +4,6 @@ services:
   web:
     build: .
     command: bash -c "sleep 6 && 
-      python /django_application/manage.py makemigrations &&
-      python /django_application/manage.py migrate && 
       python /django_application/manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/django_application 

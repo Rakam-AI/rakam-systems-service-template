@@ -59,7 +59,9 @@ coverage.xml
 # Testing
 .pytest_cache/
 .pytest_cache/*
+data/
 
 # Build
 build/
 dist/
+

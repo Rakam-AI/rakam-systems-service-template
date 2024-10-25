@@ -23,7 +23,7 @@ Cet endpoint permet de tester le bon fonctionnement du serveur. Le status code d
 #### Lancer le container docker :
 
 ```bash
-sudo docker compose -f docker-compose-dev.yml up
+sudo docker-compose -f docker-compose-dev.yml up
 sudo docker compose -f docker-compose-prod.yml up
 ```
 

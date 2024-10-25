@@ -14,4 +14,4 @@ def health_check(request):
     """
     Health check endpoint.
     """
-    return Response({"status": "healthy"}, status=200)
+    return Response({"status": "healthy...22"}, status=200)

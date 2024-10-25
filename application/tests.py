@@ -1,18 +1,23 @@
-from django.test import TestCase
-from application.engine.agent_1.agent_config import AGENT, DummyAction
+# from unittest import TestCase
 
-class CustomAgentTestCase(TestCase):
-    def setUp(self):
+# import requests
 
-        pass
+# class TestVS(TestCase):
+#     @classmethod
+#     def setUpClass(cls):
+#         super().setUpClass()
+#         # TODO : replace this with the "revert" function
+#         cls.base_url = "http://localhost:8000/api/application/vector_store"
+#         cls.search_url = f"{cls.base_url}/search/"
 
-    def test_choose_action_executes_dummy_action(self):
-        # Choose the action using the AGENT
-        action = AGENT.choose_action()
+#     def test_health_endpoint(self):
 
-        # Ensure the action is an instance of DummyAction
-        self.assertIsInstance(action, DummyAction)
+#         # Missing an input json
+#         response = requests.post(url=self.search_url, timeout=10)
 
-        # Execute the action and check the result
-        result = action.execute()
-        self.assertEqual(result, "Dummy Action Executed")
+#         self.assertEqual(response.status_code, 200)
+#         self.assertEqual(response.json(), {"status": "healthy"})
+
+
+
+

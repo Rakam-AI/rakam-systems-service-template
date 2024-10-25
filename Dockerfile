@@ -22,30 +22,31 @@ RUN apt-get clean
 
 RUN rm -rf /var/lib/apt/lists/*
 
-RUN ln -s /usr/bin/python3.8 /usr/bin/python || true && \
+RUN ln -s /usr/bin/python3.10 /usr/bin/python || true && \
     ln -s /usr/bin/pip3 /usr/bin/pip || true
 
 # Copy your requirements file into the container
 COPY requirements.txt .
 
-# Upgrade pip and install required python packages
+# Upgrade pip and install required python packages from PyPI
 RUN pip install --upgrade pip && \
     pip install -r requirements.txt
+
+# Copy the cloned package directory into the Docker container
+COPY application/rakam_systems ./rakam_systems
+
+# Install the package from the cloned directory
+RUN pip install ./rakam_systems
 
 # Copy the rest of the application code into the container.
 COPY . .
 
 # Expose port 8000 (the port Gunicorn will run on) for the container.
 EXPOSE 8000
-# EXPOSE 8000
 
-#This is required for gunicorn to find and use the settings module
+# This is required for Gunicorn to find and use the settings module
 ENV DJANGO_SETTINGS_MODULE=server.settings
 
 # Command to run Gunicorn server.
 RUN chmod +x start_prod_server.sh
 CMD ["./start_prod_server.sh"]
-
-
-
-

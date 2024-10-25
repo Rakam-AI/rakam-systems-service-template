@@ -2,11 +2,14 @@ from unittest import TestCase
 
 import requests
 
-
 class TestHealth(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.revert()
+
+    @classmethod
+    def revert(cls):
         cls.base_url = "http://localhost:8000"
         cls.health_check_url = f"{cls.base_url}/health/"
 
