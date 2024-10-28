@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "api_auth",
     "application",
+    'drf_spectacular'
 ]
 
 MIDDLEWARE = [
@@ -84,6 +85,7 @@ REST_FRAMEWORK = {
     "DEFAULT_RENDERER_CLASSES": ("rest_framework.renderers.JSONRenderer",),
     "DEFAULT_AUTHENTICATION_CLASSES": (),
     "DEFAULT_PERMISSION_CLASSES": (),
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 ALGORITHM = "RS256"
@@ -147,3 +149,9 @@ DATABASES = {
     }
 }
 
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'SimpleRAG',
+    'DESCRIPTION': 'API description',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+}

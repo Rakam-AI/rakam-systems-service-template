@@ -1,52 +1,48 @@
-# Use an official NVIDIA CUDA base image
+# Use an official Python 3.10 base image with required CUDA compatibility
 FROM python:3.10
 
+# Set environment variables
 ENV DEBIAN_FRONTEND=noninteractive
-
-# Metadata as described above
 LABEL maintainer="jean@rakam.ai" \
       version="0.0"
 
 # Set the working directory inside the container
-WORKDIR /application
+WORKDIR /django_application
 
-# Install system packages and Python.
-RUN apt-get update
+# Install system packages and Python dependencies
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        gcc \
+        memcached \
+        libpq-dev && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
-RUN apt-get install -y --no-install-recommends \
-    gcc \
-    memcached \
-    libpq-dev
-
-RUN apt-get clean
-
-RUN rm -rf /var/lib/apt/lists/*
-
+# Link python and pip commands
 RUN ln -s /usr/bin/python3.10 /usr/bin/python || true && \
     ln -s /usr/bin/pip3 /usr/bin/pip || true
 
-# Copy your requirements file into the container
+# Copy and install Python dependencies
 COPY requirements.txt .
-
-# Upgrade pip and install required python packages from PyPI
 RUN pip install --upgrade pip && \
     pip install -r requirements.txt
 
-# Copy the cloned package directory into the Docker container
-COPY application/rakam_systems ./rakam_systems
-
-# Install the package from the cloned directory
-RUN pip install ./rakam_systems
-
-# Copy the rest of the application code into the container.
+# Copy the rest of the application code into the container
 COPY . .
 
-# Expose port 8000 (the port Gunicorn will run on) for the container.
+# Install the application package in editable mode
+RUN pip install -e ./application/rakam_systems
+
+# Copy and set permissions for scripts
+COPY test_views.sh /usr/local/bin/test_views.sh
+RUN chmod +x /usr/local/bin/test_views.sh
+RUN chmod +x start_prod_server.sh
+
+# Expose port 8000
 EXPOSE 8000
 
-# This is required for Gunicorn to find and use the settings module
+# Set the Django settings module
 ENV DJANGO_SETTINGS_MODULE=server.settings
 
-# Command to run Gunicorn server.
-RUN chmod +x start_prod_server.sh
+# Command to start the production server
 CMD ["./start_prod_server.sh"]
