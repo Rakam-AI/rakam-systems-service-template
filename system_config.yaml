@@ -7,11 +7,9 @@ components:
   VectorStore:
     functions:
       search: external/vector_store/search/
-  VSManagerInject:
+  VSManager:
     functions:
       inject_from_directory: external/vs_manager/inject_from_directory/
-  VSManagerAdd:
-    functions:
       add_from_directory: external/vs_manager/add_from_directory/
   Generator:
     functions:
