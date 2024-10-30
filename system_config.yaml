@@ -1,13 +1,21 @@
+base_url: http://localhost:8000/api/application
+
 components:
   DataProcessor:
-    url: http://localhost:8000/api/application/internal/process_from_directory/
+    functions:
+      process_from_directory: internal/process_from_directory/
   VectorStore:
-    url: http://localhost:8000/api/application/external/vector_store/search/
+    functions:
+      search: external/vector_store/search/
   VSManagerInject:
-    url: http://localhost:8000/api/application/external/vs_manager/inject_from_directory/
+    functions:
+      inject_from_directory: external/vs_manager/inject_from_directory/
   VSManagerAdd:
-    url: http://localhost:8000/api/application/external/vs_manager/add_from_directory/
+    functions:
+      add_from_directory: external/vs_manager/add_from_directory/
   Generator:
-    url: http://localhost:8000/api/application/external/simple_generate/
+    functions:
+      simple_generate: external/simple_generate/
   RAGGenerator:
-    url: http://localhost:8000/api/application/external/rag/
+    functions:
+      rag: external/rag/
