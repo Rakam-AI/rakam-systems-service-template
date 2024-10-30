@@ -34,8 +34,6 @@ COPY . .
 RUN pip install -e ./application/rakam_systems
 
 # Copy and set permissions for scripts
-COPY test_views.sh /usr/local/bin/test_views.sh
-RUN chmod +x /usr/local/bin/test_views.sh
 RUN chmod +x start_prod_server.sh
 
 # Expose port 8000

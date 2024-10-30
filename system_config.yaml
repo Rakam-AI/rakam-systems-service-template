@@ -1,0 +1,13 @@
+components:
+  DataProcessor:
+    url: http://localhost:8000/api/application/internal/process_from_directory/
+  VectorStore:
+    url: http://localhost:8000/api/application/external/vector_store/search/
+  VSManagerInject:
+    url: http://localhost:8000/api/application/external/vs_manager/inject_from_directory/
+  VSManagerAdd:
+    url: http://localhost:8000/api/application/external/vs_manager/add_from_directory/
+  Generator:
+    url: http://localhost:8000/api/application/external/simple_generate/
+  RAGGenerator:
+    url: http://localhost:8000/api/application/external/rag/

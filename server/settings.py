@@ -150,7 +150,7 @@ DATABASES = {
 }
 
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'SimpleRAG',
+    'TITLE': 'Rakam Systems API',   
     'DESCRIPTION': 'API description',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,

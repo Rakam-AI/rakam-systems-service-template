@@ -6,7 +6,7 @@ class TestVS(TestCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.base_url = "http://localhost:8000/api/application"
-        cls.processor_url = f"{cls.base_url}/dataprocessor/"
+        cls.processor_url = f"{cls.base_url}/internal/dataprocessor/"
         cls.search_url = f"{cls.base_url}/vector_store/search/"
         cls.vs_manager_inject_url = f"{cls.base_url}/vs_manager/inject/"
         cls.rag_url = f"{cls.base_url}/rag/"
