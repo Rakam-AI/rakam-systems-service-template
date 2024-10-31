@@ -3,10 +3,9 @@ from application.serializers import (
     DataProcessorSerializer,
     VectorStoreSearchSerializer,
     VectorStoreGetSizeSerializer,
-    VSManagerInjectSerializer,
+    VSManagerBuildSerializer,
     VSManagerAddSerializer,
-    SimpleGenerationSerializer,
-    RAGSerializer,
+    RAGGenerationSerializer,
 )
 
 from drf_spectacular.utils import extend_schema, OpenApiResponse
@@ -116,7 +115,7 @@ def get_nodes(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @extend_schema(
-    request=VSManagerInjectSerializer,
+    request=VSManagerBuildSerializer,
     responses={
         200: OpenApiResponse(
             response={
@@ -129,12 +128,12 @@ def get_nodes(request):
         ),
         400: OpenApiResponse(description="Bad Request"),
     },
-    description="Inject collection from data in a directory into the vector store.",
+    description="Build collection from data in a directory into the vector store.",
     tags=["Vector Store Manager"],
 )
 @api_view(["POST"])
-def vs_manager_inject(request):
-    serializer = VSManagerInjectSerializer(data=request.data)
+def vs_manager_build(request):
+    serializer = VSManagerBuildSerializer(data=request.data)
     if serializer.is_valid():
         directory = serializer.validated_data.get("directory")
         collection_name = serializer.validated_data.get("collection_name") or "base"
@@ -195,8 +194,9 @@ def vs_manager_add_files(request):
     
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 @extend_schema(
-    request=SimpleGenerationSerializer,
+    request=RAGGenerationSerializer,
     responses={
         200: OpenApiResponse(
             response={
@@ -211,47 +211,16 @@ def vs_manager_add_files(request):
         ),
         400: OpenApiResponse(description="Bad Request"),
     },
-    description="Generate text using LLM based on the provided query.",
-    tags=["Simple Generator"],
-)
-@api_view(["POST"])
-def simple_generation(request):
-    serializer = SimpleGenerationSerializer(data=request.data)
-    if serializer.is_valid():
-        query = serializer.validated_data.get("query")
-        generated_text = components.generator.call_direct_generation(query=query)
-        response_data = {
-            "generated_text": generated_text,
-            "query": query,
-            "status": "success",
-        }
-        return Response(response_data, status=status.HTTP_200_OK)
-    
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-@extend_schema(
-    request=RAGSerializer,
-    responses={
-        200: OpenApiResponse(
-            response={
-                "type": "object",
-                "properties": {
-                    "generated_text": {"type": "string"},
-                    "confidence_score": {"type": "number"},
-                },
-            }
-        ),
-        400: OpenApiResponse(description="Bad Request"),
-    },
-    description="Retrieve answers using a Retrieval-Augmented Generation (RAG) approach.",
+    description="Generate text using RAG based on the provided query.",
     tags=["RAG Generator"],
 )
 @api_view(["POST"])
-def rag(request):
-    serializer = RAGSerializer(data=request.data)
+def rag_generation(request):
+    serializer = RAGGenerationSerializer(data=request.data)
     if serializer.is_valid():
-        test_query = serializer.validated_data.get("test_query")
-        base_response = components.ragGen.test(test_query=test_query)
-        return Response(base_response, status=status.HTTP_200_OK)
+        query = serializer.validated_data.get("query")
+        generated_text = components.ragGenerator.call_main(query=query)
+        
+        return Response(generated_text, status=status.HTTP_200_OK)
+    
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

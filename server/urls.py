@@ -20,5 +20,5 @@ from api_auth import views
 urlpatterns = [
     path('health/', views.health_check, name='health_check'),
     path('api/auth/', include('api_auth.urls')),
-    path('api/application/', include('application.urls')),
+    path('api/', include('application.urls')),
 ]
