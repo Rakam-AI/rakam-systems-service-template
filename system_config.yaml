@@ -3,18 +3,22 @@ base_url: http://localhost:8000/api
 components:
   DataProcessor:
     functions:
-      process_from_directory: internal/process_from_directory/
+      process_from_directory: external/process_from_directory/
+      process_from_file: external/process_from_file/
   
   VectorStore:
     functions:
       search: external/vector_store/search/
-    requires:
-      - DataProcessor
+      get_nodes: internal/vector_store/get_nodes/
 
   VSManager:
     functions:
-      inject_from_directory: external/vs_manager/inject_from_directory/
+      build_from_directory: external/vs_manager/build_from_directory/  # corrected "directroy" to "directory"
+      build_from_file: external/vs_manager/build_from_file/
       add_from_directory: external/vs_manager/add_from_directory/
+      add_from_file: external/vs_manager/add_from_file/
+    required_components:
+      - DataProcessor
   
   Generator:
     functions:
@@ -22,4 +26,8 @@ components:
   
   RAGGenerator:
     functions:
-      rag: external/rag/
+      rag: external/rag_generate/
+      split_query: internal/split_query/
+      rag_generate_split_query: external/rag_generate_splitQuery/
+    required_components:
+      - VectorStore
