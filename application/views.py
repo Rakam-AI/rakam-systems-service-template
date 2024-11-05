@@ -19,6 +19,10 @@ from application.serializers import (
     LLMConnectorCallLLMSerializer,
     LLMConnectorCallLLMStreamSerializer,
     LLMConnectorCallLLMOutputJSONSerializer,
+    SQLDBExcuteQuerySerializer,
+    SQLDBUpdateDataSerializer,
+    SQLDBInsertDataSerializer,
+    SQLDBDeleteDataSerializer,
 )
 
 from drf_spectacular.utils import extend_schema, OpenApiResponse
@@ -653,3 +657,123 @@ def call_llm_output_json(request):
         return Response({"response": response}, status=status.HTTP_200_OK)
     
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@extend_schema(
+    request=SQLDBExcuteQuerySerializer,
+    responses={
+        200: OpenApiResponse(
+            response={
+                "type": "object",
+                "properties": {
+                    "response": {"type": "string"},
+                },
+            }
+        ),
+        400: OpenApiResponse(description="Bad Request"),
+    },
+    description="Execute a query on the SQL database.",
+    tags=["SQL Database"],
+)
+@api_view(["POST"])
+def SQLDBexecute_query(request):
+    serializer = SQLDBExcuteQuerySerializer(data=request.data)
+    if serializer.is_valid():
+        query = serializer.validated_data.get("query")
+        params = serializer.validated_data.get("params")
+        
+        response = components.sql_db.execute_query(query=query, params=params)
+        
+        return Response({"response": response}, status=status.HTTP_200_OK)
+    
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@extend_schema(
+    request=SQLDBInsertDataSerializer,
+    responses={
+        200: OpenApiResponse(
+            response={
+                "type": "object",
+                "properties": {
+                    "response": {"type": "string"},
+                },
+            }
+        ),
+        400: OpenApiResponse(description="Bad Request"),
+    },
+    description="Insert data into the SQL database.",
+    tags=["SQL Database"],
+)
+@api_view(["POST"])
+def SQLDBinsert_data(request):
+    serializer = SQLDBInsertDataSerializer(data=request.data)
+    if serializer.is_valid():
+        table = serializer.validated_data.get("table")
+        data = serializer.validated_data.get("data")
+        
+        components.sql_db.insert_data(table=table, data=data)
+        
+        return Response({"response": "Data inserted successfully."}, status=status.HTTP_200_OK)
+    
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@extend_schema(
+    request=SQLDBUpdateDataSerializer,
+    responses={
+        200: OpenApiResponse(
+            response={
+                "type": "object",
+                "properties": {
+                    "response": {"type": "string"},
+                },
+            }
+        ),
+        400: OpenApiResponse(description="Bad Request"),
+    },
+    description="Update data in the SQL database.",
+    tags=["SQL Database"],
+)
+@api_view(["POST"])
+def SQLDBupdate_data(request):
+    serializer = SQLDBUpdateDataSerializer(data=request.data)
+    if serializer.is_valid():
+        table = serializer.validated_data.get("table")
+        data = serializer.validated_data.get("data")
+        condition = serializer.validated_data.get("condition")
+        condition_params = serializer.validated_data.get("condition_params")
+        
+        components.sql_db.update_data(table=table, data=data, condition=condition, condition_params=condition_params)
+        
+        return Response({"response": "Data updated successfully."}, status=status.HTTP_200_OK)
+    
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@extend_schema(
+    request=SQLDBDeleteDataSerializer,
+    responses={
+        200: OpenApiResponse(
+            response={
+                "type": "object",
+                "properties": {
+                    "response": {"type": "string"},
+                },
+            }
+        ),
+        400: OpenApiResponse(description="Bad Request"),
+    },
+    description="Delete data from the SQL database.",
+    tags=["SQL Database"],
+)
+@api_view(["POST"])
+def SQLDBdelete_data(request):
+    serializer = SQLDBDeleteDataSerializer(data=request.data)
+    if serializer.is_valid():
+        table = serializer.validated_data.get("table")
+        condition = serializer.validated_data.get("condition")
+        condition_params = serializer.validated_data.get("condition_params")
+        
+        components.sql_db.delete_data(table=table, condition=condition, condition_params=condition_params)
+        
+        return Response({"response": "Data deleted successfully."}, status=status.HTTP_200_OK)
+    
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+

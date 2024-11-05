@@ -30,6 +30,11 @@ urlpatterns = [
     path("external/llm_connector/call_llm/", views.call_llm, name="call_llm"),
     path("external/llm_connector/call_llm_stream/", views.call_llm_stream, name="call_llm_stream"),
     path("external/llm_connector/call_llm_output_json/", views.call_llm_output_json, name="call_llm_output_json"),
+
+    path("external/sqldb/execute_query/", views.SQLDBexecute_query, name="SQLDB_execute_query"),
+    path("external/sqldb/insert_data/", views.SQLDBinsert_data, name="SQLDB_insert_data"),
+    path("external/sqldb/update_data/", views.SQLDBupdate_data, name="SQLDB_update_data"),
+    path("external/sqldb/delete_data/", views.SQLDBdelete_data, name="SQLDB_delete_data"),
     
     path('schema/', SpectacularAPIView.as_view(), name='schema'),
     path('docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
