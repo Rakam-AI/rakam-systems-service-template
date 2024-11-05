@@ -90,4 +90,7 @@ class SQLDBDeleteDataSerializer(serializers.Serializer):
     table = serializers.CharField(required=True, max_length=1024)
     condition = serializers.CharField(required=True, max_length=8192)
     condition_params = serializers.ListField(required=True)
-    
+
+class SQLDBCreateTableSerializer(serializers.Serializer):
+    table = serializers.CharField(required=True, max_length=1024)
+    columns = serializers.CharField(required=True, max_length=8192)

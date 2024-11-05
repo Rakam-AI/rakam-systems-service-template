@@ -150,8 +150,8 @@ DATABASES = {
 }
 
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'Rakam Systems API',   
+    'TITLE': 'Rakam Systems APIs',   
     'DESCRIPTION': 'API description',
-    'VERSION': '1.0.0',
+    'VERSION': '0.0.1',
     'SERVE_INCLUDE_SCHEMA': False,
 }

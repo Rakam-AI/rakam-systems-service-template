@@ -23,6 +23,7 @@ from application.serializers import (
     SQLDBUpdateDataSerializer,
     SQLDBInsertDataSerializer,
     SQLDBDeleteDataSerializer,
+    SQLDBCreateTableSerializer,
 )
 
 from drf_spectacular.utils import extend_schema, OpenApiResponse
@@ -777,3 +778,54 @@ def SQLDBdelete_data(request):
     
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+@extend_schema(
+    request=SQLDBCreateTableSerializer,
+    responses={
+        200: OpenApiResponse(
+            response={
+                "type": "object",
+                "properties": {
+                    "response": {"type": "string"},
+                },
+            }
+        ),
+        400: OpenApiResponse(description="Bad Request"),
+    },
+    description="Create a table in the SQL database.",
+    tags=["SQL Database"],
+)
+@api_view(["POST"])
+def SQLDBcreate_table(request):
+    serializer = SQLDBCreateTableSerializer(data=request.data)
+    if serializer.is_valid():
+        table = serializer.validated_data.get("table")
+        columns = serializer.validated_data.get("columns")
+        
+        components.sql_db.create_table(table=table, columns=columns)
+        
+        return Response({"response": "Table created successfully."}, status=status.HTTP_200_OK)
+    
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@extend_schema(
+    responses={
+        200: OpenApiResponse(
+            response={
+                "type": "object",
+                "properties": {
+                    "response": {"type": "string"},
+                },
+            }
+        ),
+    },
+    description="Get data from the SQL database.",
+    tags=["SQL Database"],
+)
+@api_view(["GET"])
+def SQLDBshow_tables(request):
+    response = components.sql_db.show_tables_with_content()
+    
+    # Convert the dictionary to a tuple of items to make it hashable
+    hashable_response = tuple(response.items())
+    
+    return Response({"Tables": hashable_response}, status=status.HTTP_200_OK)

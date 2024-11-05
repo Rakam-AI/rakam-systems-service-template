@@ -17,7 +17,7 @@ components:
 
   VSManager:
     functions:
-      build_from_directory: external/vs_manager/build_from_directory/ 
+      build_from_directory: external/vs_manager/build_from_directory/
       build_from_file: external/vs_manager/build_from_file/
       add_from_directory: external/vs_manager/add_from_directory/
       add_from_file: external/vs_manager/add_from_file/
@@ -29,6 +29,8 @@ components:
   Generator:
     functions:
       simple_generate: external/simple_generate/
+    server_group:
+      - group1
   
   RAGGenerator:
     functions:
@@ -49,8 +51,7 @@ components:
       empty_prefix: external/s3_manager/empty_prefix/
     server_group:
       - group3
-    
-
+  
   LLMConnector:
     functions:
       call_llm: external/llm_connector/call_llm/
@@ -58,3 +59,14 @@ components:
       call_llm_output_json: external/llm_connector/call_llm_output_json/
     server_group:
       - group4
+  
+  SQLDB:
+    functions:
+      execute_query: external/sqldb/execute_query/
+      insert_data: external/sqldb/insert_data/
+      update_data: external/sqldb/update_data/
+      delete_data: external/sqldb/delete_data/
+      create_table: external/sqldb/create_table/
+      get_tables: external/sqldb/get_tables/
+    server_group:
+      - group5
