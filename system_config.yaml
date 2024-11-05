@@ -5,20 +5,26 @@ components:
     functions:
       process_from_directory: external/process_from_directory/
       process_from_file: external/process_from_file/
+    server_group:
+      - group1
   
   VectorStore:
     functions:
       search: external/vector_store/search/
       get_nodes: internal/vector_store/get_nodes/
+    server_group:
+      - group2
 
   VSManager:
     functions:
-      build_from_directory: external/vs_manager/build_from_directory/  # corrected "directroy" to "directory"
+      build_from_directory: external/vs_manager/build_from_directory/ 
       build_from_file: external/vs_manager/build_from_file/
       add_from_directory: external/vs_manager/add_from_directory/
       add_from_file: external/vs_manager/add_from_file/
     required_components:
       - DataProcessor
+    server_group:
+      - group1
   
   Generator:
     functions:
@@ -31,3 +37,24 @@ components:
       rag_generate_split_query: external/rag_generate_splitQuery/
     required_components:
       - VectorStore
+    server_group:
+      - group2
+  
+  S3Manager:
+    functions:
+      upload_folders: external/s3_manager/upload_folders/
+      download_files: external/s3_manager/download_files/
+      list_files: external/s3_manager/list_files/
+      update_prefix: external/s3_manager/update_prefix/
+      empty_prefix: external/s3_manager/empty_prefix/
+    server_group:
+      - group3
+    
+
+  LLMConnector:
+    functions:
+      call_llm: external/llm_connector/call_llm/
+      call_llm_stream: external/llm_connector/call_llm_stream/
+      call_llm_output_json: external/llm_connector/call_llm_output_json/
+    server_group:
+      - group4

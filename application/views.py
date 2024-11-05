@@ -11,6 +11,14 @@ from application.serializers import (
     RAGGenerationSerializer,
     RAGGenerationSplitQuerySerializer,
     RAGGenerationSplitQueryResponseSerializer,
+    S3FileManagerUploadFoldersSerializer,
+    S3FileManagerDownloadFilesSerializer,
+    S3FileManagerListFilesSerializer,
+    S3FileManagerUpdatePrefixSerializer,
+    S3FileManagerEmptySerializer,
+    LLMConnectorCallLLMSerializer,
+    LLMConnectorCallLLMStreamSerializer,
+    LLMConnectorCallLLMOutputJSONSerializer,
 )
 
 from drf_spectacular.utils import extend_schema, OpenApiResponse
@@ -398,5 +406,250 @@ def rag_generation_split_query_response(request):
         generated_text = components.ragGenerator.call_rag_with_split_query(query=query)
         
         return Response(generated_text, status=status.HTTP_200_OK)
+    
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@extend_schema(
+    request=S3FileManagerUploadFoldersSerializer,
+    responses={
+        200: OpenApiResponse(
+            response={
+                "type": "object",
+                "properties": {
+                    "message": {"type": "string"},
+                    "status": {"type": "string"},
+                },
+            }
+        ),
+        400: OpenApiResponse(description="Bad Request"),
+    },
+    description="Upload folders to an S3 bucket.",
+    tags=["S3 File Manager"],
+)
+@api_view(["POST"])
+def upload_folders(request):
+    serializer = S3FileManagerUploadFoldersSerializer(data=request.data)
+    if serializer.is_valid():
+        local_path = serializer.validated_data.get("local_path")
+        prefix = serializer.validated_data.get("prefix") or "test"
+        
+        components.s3_manager.upload_folders(local_path=local_path, prefix=prefix)
+        
+        return Response({"message": "Folders uploaded successfully.", "status": "success", "local_path": local_path, "prefix":prefix}, status=status.HTTP_200_OK)
+    
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@extend_schema(
+    request=S3FileManagerDownloadFilesSerializer,
+    responses={
+        200: OpenApiResponse(
+            response={
+                "type": "object",
+                "properties": {
+                    "message": {"type": "string"},
+                    "status": {"type": "string"},
+                },
+            }
+        ),
+        400: OpenApiResponse(description="Bad Request"),
+    },
+    description="Download files from an S3 bucket.",
+    tags=["S3 File Manager"],
+)
+@api_view(["POST"])
+def download_files(request):
+    serializer = S3FileManagerDownloadFilesSerializer(data=request.data)
+    if serializer.is_valid():
+        local_path = serializer.validated_data.get("local_path")
+        
+        components.s3_manager.download_files(local_path=local_path)
+        
+        return Response({"message": "Files downloaded successfully.", "status": "success", "local_path": local_path}, status=status.HTTP_200_OK)
+    
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@extend_schema(
+    request=S3FileManagerListFilesSerializer,
+    responses={
+        200: OpenApiResponse(
+            response={
+                "type": "object",
+                "properties": {
+                    "files": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                    },
+                    "folders": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                    },
+                },
+            }
+        ),
+        400: OpenApiResponse(description="Bad Request"),
+    },
+    description="List files and folders in an S3 bucket.",
+    tags=["S3 File Manager"],
+)
+@api_view(["POST"])
+def list_files(request):
+    serializer = S3FileManagerListFilesSerializer(data=request.data)
+    if serializer.is_valid():
+        prefix = serializer.validated_data.get("prefix")
+        file_names, folders = components.s3_manager.get_file_folders(prefix=prefix)
+        
+        return Response({"files": file_names, "folders": folders}, status=status.HTTP_200_OK)
+    
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@extend_schema(
+    request=S3FileManagerUpdatePrefixSerializer,
+    responses={
+        200: OpenApiResponse(
+            response={
+                "type": "object",
+                "properties": {
+                    "message": {"type": "string"},
+                    "status": {"type": "string"},
+                },
+            }
+        ),
+        400: OpenApiResponse(description="Bad Request"),
+    },
+    description="Update the prefix of files in an S3 bucket.",
+    tags=["S3 File Manager"],
+)
+@api_view(["POST"])
+def update_prefix(request):
+    serializer = S3FileManagerUpdatePrefixSerializer(data=request.data)
+    if serializer.is_valid():
+        local_path = serializer.validated_data.get("local_path")
+        prefix = serializer.validated_data.get("prefix")
+        
+        components.s3_manager.update_prefix(local_path=local_path, prefix=prefix)
+        
+        return Response({"message": "Prefix updated successfully.", "status": "success", "local_path": local_path, "prefix": prefix}, status=status.HTTP_200_OK)
+    
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@extend_schema(
+    request=S3FileManagerEmptySerializer,
+    responses={
+        200: OpenApiResponse(
+            response={
+                "type": "object",
+                "properties": {
+                    "message": {"type": "string"},
+                    "status": {"type": "string"},
+                },
+            }
+        ),
+        400: OpenApiResponse(description="Bad Request"),
+    },
+    description="Empty an S3 bucket.",
+    tags=["S3 File Manager"],
+)
+@api_view(["POST"])
+def empty_s3(request):
+    serializer = S3FileManagerEmptySerializer(data=request.data)
+    if serializer.is_valid():
+        prefix = serializer.validated_data.get("prefix")
+        
+        components.s3_manager.empty(prefix=prefix)
+        
+        return Response({"message": "S3 bucket emptied successfully.", "status": "success", "prefix": prefix}, status=status.HTTP_200_OK)
+    
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@extend_schema(
+    request=LLMConnectorCallLLMSerializer,
+    responses={
+        200: OpenApiResponse(
+            response={
+                "type": "object",
+                "properties": {
+                    "response": {"type": "string"},
+                },
+            }
+        ),
+        400: OpenApiResponse(description="Bad Request"),
+    },
+    description="Call the LLM with the given system and user prompts.",
+    tags=["LLM Connector"],
+)
+@api_view(["POST"])
+def call_llm(request):
+    serializer = LLMConnectorCallLLMSerializer(data=request.data)
+    if serializer.is_valid():
+        sys_prompt = serializer.validated_data.get("sys_prompt")
+        prompt = serializer.validated_data.get("prompt")
+        temperature = serializer.validated_data.get("temperature") or 0
+        
+        response = components.llm_connector.call_llm(sys_prompt=sys_prompt, prompt=prompt, temperature=temperature)
+        
+        return Response({"system_prompt":sys_prompt, "user_prompt": prompt,"response": response, "temperature": temperature}, status=status.HTTP_200_OK)
+    
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@extend_schema(
+    request=LLMConnectorCallLLMStreamSerializer,
+    responses={
+        200: OpenApiResponse(
+            response={
+                "type": "object",
+                "properties": {
+                    "response": {"type": "string"},
+                },
+            }
+        ),
+        400: OpenApiResponse(description="Bad Request"),
+    },
+    description="Call the LLM with the given system and user prompts using streaming.",
+    tags=["LLM Connector"],
+)
+@api_view(["POST"])
+def call_llm_stream(request):
+    serializer = LLMConnectorCallLLMStreamSerializer(data=request.data)
+    if serializer.is_valid():
+        sys_prompt = serializer.validated_data.get("sys_prompt")
+        prompt = serializer.validated_data.get("prompt")
+        temperature = serializer.validated_data.get("temperature") or 0
+        seed = serializer.validated_data.get("seed") or 0
+        
+        response = components.llm_connector.call_llm_stream(sys_prompt=sys_prompt, prompt=prompt, temperature=temperature, seed=seed)
+        
+        return Response({"response": response}, status=status.HTTP_200_OK)
+    
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@extend_schema(
+    request=LLMConnectorCallLLMOutputJSONSerializer,
+    responses={
+        200: OpenApiResponse(
+            response={
+                "type": "object",
+                "properties": {
+                    "response": {"type": "string"},
+                },
+            }
+        ),
+        400: OpenApiResponse(description="Bad Request"),
+    },
+    description="Call the LLM with the given system and user prompts and output in JSON format.",
+    tags=["LLM Connector"],
+)
+@api_view(["POST"])
+def call_llm_output_json(request):
+    serializer = LLMConnectorCallLLMOutputJSONSerializer(data=request.data)
+    if serializer.is_valid():
+        sys_prompt = serializer.validated_data.get("sys_prompt")
+        prompt = serializer.validated_data.get("prompt")
+        temperature = serializer.validated_data.get("temperature") or 0
+        seed = serializer.validated_data.get("seed") or 0
+        
+        response = components.llm_connector.call_llm_output_json(sys_prompt=sys_prompt, prompt=prompt, temperature=temperature, seed=seed)
+        
+        return Response({"response": response}, status=status.HTTP_200_OK)
     
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

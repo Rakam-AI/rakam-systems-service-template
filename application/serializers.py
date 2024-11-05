@@ -37,3 +37,37 @@ class RAGGenerationSplitQuerySerializer(serializers.Serializer):
 
 class RAGGenerationSplitQueryResponseSerializer(serializers.Serializer):
     query = serializers.CharField(required=True, max_length=255)
+
+class S3FileManagerUploadFoldersSerializer(serializers.Serializer):
+    local_path = serializers.CharField(required=True, max_length=255)
+    prefix = serializers.CharField(required=False, max_length=255, default="test")
+
+class S3FileManagerDownloadFilesSerializer(serializers.Serializer):
+    local_path = serializers.CharField(required=False, max_length=255, default=None)
+
+class S3FileManagerListFilesSerializer(serializers.Serializer):
+    prefix = serializers.CharField(required=False, max_length=255, default=None)
+
+class S3FileManagerUpdatePrefixSerializer(serializers.Serializer):
+    local_path = serializers.CharField(required=True, max_length=255)
+    prefix = serializers.CharField(required=True, max_length=255)
+
+class S3FileManagerEmptySerializer(serializers.Serializer):
+    prefix = serializers.CharField(required=False, max_length=255, default=None)
+
+class LLMConnectorCallLLMSerializer(serializers.Serializer):
+    sys_prompt = serializers.CharField(required=True, max_length=255)
+    prompt = serializers.CharField(required=True, max_length=8192)
+    temperature = serializers.FloatField(required=False, default=0)
+
+class LLMConnectorCallLLMStreamSerializer(serializers.Serializer):
+    sys_prompt = serializers.CharField(required=True, max_length=255)
+    prompt = serializers.CharField(required=True, max_length=8192)
+    temperature = serializers.FloatField(required=False, default=0)
+    seed = serializers.IntegerField(required=False, default=0)
+
+class LLMConnectorCallLLMOutputJSONSerializer(serializers.Serializer):
+    sys_prompt = serializers.CharField(required=True, max_length=255)
+    prompt = serializers.CharField(required=True, max_length=8192)
+    temperature = serializers.FloatField(required=False, default=0)
+    seed = serializers.IntegerField(required=False, default=0)

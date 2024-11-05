@@ -30,6 +30,9 @@ RUN pip install --upgrade pip && \
 # Copy the rest of the application code into the container
 COPY . .
 
+# Install the rakam_systems package
+RUN pip install -r ./application/rakam_systems/requirements.txt
+
 # Install the application package in editable mode
 RUN pip install -e ./application/rakam_systems
 
