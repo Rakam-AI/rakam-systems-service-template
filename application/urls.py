@@ -6,8 +6,8 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 
 urlpatterns = [
-    path("external/process_from_directory/", views.process_from_directory, name="process_from_directory"),
-    path("external/process_from_file/", views.process_from_file, name="process_from_file"),
+    path("external/data_processor/process_from_directory/", views.process_from_directory, name="process_from_directory"),
+    path("external/data_processor/process_from_file/", views.process_from_file, name="process_from_file"),
 
     path("external/vector_store/search/", views.search_vector_store, name="search_vector_store"),
     path("internal/vector_store/get_nodes/", views.get_nodes, name="get_nodes"),
@@ -17,9 +17,9 @@ urlpatterns = [
     path("external/vs_manager/add_from_directory/", views.vs_manager_add_from_directory, name="vs_manager_add_from_directory"),
     path("external/vs_manager/add_from_file/", views.vs_manager_add_from_file, name="vs_manager_add_from_file"),
 
-    path("external/rag_generate/", views.rag_generation, name="rag_generation"),
-    path("internal/split_query/", views.rag_generation_split_query, name="split_query"),
-    path("external/rag_generate_splitQuery/", views.rag_generation_split_query_response, name="rag_generation_split_query"),
+    path("external/rag_generator/rag_generate/", views.rag_generation, name="rag_generation"),
+    path("internal/rag_generator/split_query/", views.rag_generation_split_query, name="split_query"),
+    path("external/rag_generator/split_query_generate/", views.rag_generation_split_query_response, name="rag_generation_split_query"),
 
     path("external/s3_manager/upload_folders/", views.upload_folders, name="upload_folders"),
     path("external/s3_manager/download_files/", views.download_files, name="download_files"),

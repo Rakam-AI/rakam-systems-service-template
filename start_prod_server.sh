@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# python3 
+
 # Start Gunicorn server
 exec gunicorn server.wsgi:application \
     --bind 0.0.0.0:8000 \
