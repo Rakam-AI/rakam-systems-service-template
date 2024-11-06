@@ -1,59 +1,61 @@
 base_url: http://localhost:8000/api
 
 ServerGroups:
-  - name: ingestion_server
+  - name: injection_server
     components:
       - DataProcessor:
-          functions:
-            process_from_directory: external/data_processor/process_from_directory/
-            process_from_file: external/data_processor/process_from_file/
+          process_from_directory: external/data_processor/process_from_directory/
+          process_from_file: external/data_processor/process_from_file/
       - VSManager:
-          functions:
-            build_from_directory: external/vs_manager/build_from_directory/
-            build_from_file: external/vs_manager/build_from_file/
-            add_from_directory: external/vs_manager/add_from_directory/
-            add_from_file: external/vs_manager/add_from_file/
+          build_from_directory: external/vs_manager/build_from_directory/
+          build_from_file: external/vs_manager/build_from_file/
+          add_from_directory: external/vs_manager/add_from_directory/
+          add_from_file: external/vs_manager/add_from_file/
 
-  - name: generation_server
-    components:
-      - VectorStore:
-          functions:
-            search: external/vector_store/search/
-            get_nodes: internal/vector_store/get_nodes/
-      - Generator:
-          functions:
-            simple_generate: external/rag_generator/rag_generate/
-      - RAGGenerator:
-          functions:
-            rag: external/rag_generator/rag_generate/
-            split_query: internal/rag_generator/split_query/
-            rag_generate_split_query: external/rag_generator/split_query_generate/
-
-  - name: s3_server
-    components:
       - S3Manager:
-          functions:
             upload_folders: external/s3_manager/upload_folders/
             download_files: external/s3_manager/download_files/
             list_files: external/s3_manager/list_files/
             update_prefix: external/s3_manager/update_prefix/
             empty_prefix: external/s3_manager/empty_prefix/
 
-  - name: LLM_server
+  - name: vector_search_server
+    components:
+      - VectorStore:
+          search: external/vector_store/search/
+          get_nodes: internal/vector_store/get_nodes/
+          
+      - S3Manager:
+          upload_folders: external/s3_manager/upload_folders/
+          download_files: external/s3_manager/download_files/
+          list_files: external/s3_manager/list_files/
+          update_prefix: external/s3_manager/update_prefix/
+          empty_prefix: external/s3_manager/empty_prefix/
+
+  - name: generation_server
     components:
       - LLMConnector:
-          functions:
-            call_llm: external/llm_connector/call_llm/
-            call_llm_stream: external/llm_connector/call_llm_stream/
-            call_llm_output_json: external/llm_connector/call_llm_output_json/
+          call_llm: external/llm_connector/call_llm/
+          call_llm_stream: external/llm_connector/call_llm_stream/
+          call_llm_output_json: external/llm_connector/call_llm_output_json/
+      - RAGGenerator:
+          rag: external/rag_generator/rag_generate/
+          split_query: internal/rag_generator/split_query/
+          rag_generate_split_query: external/rag_generator/split_query_generate/
+          
+      - S3Manager:
+          upload_folders: external/s3_manager/upload_folders/
+          download_files: external/s3_manager/download_files/
+          list_files: external/s3_manager/list_files/
+          update_prefix: external/s3_manager/update_prefix/
+          empty_prefix: external/s3_manager/empty_prefix/
 
   - name: DB_server
     components:
       - SQLDB:
-          functions:
-            execute_query: external/sqldb/execute_query/
-            insert_data: external/sqldb/insert_data/
-            update_data: external/sqldb/update_data/
-            delete_data: external/sqldb/delete_data/
-            create_table: external/sqldb/create_table/
-            get_tables: external/sqldb/get_tables/
+          execute_query: external/sqldb/execute_query/
+          insert_data: external/sqldb/insert_data/
+          update_data: external/sqldb/update_data/
+          delete_data: external/sqldb/delete_data/
+          create_table: external/sqldb/create_table/
+          get_tables: external/sqldb/get_tables/
