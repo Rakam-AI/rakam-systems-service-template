@@ -1,0 +1,272 @@
+base_url: http://localhost:8000/api
+
+ServerGroups:
+  - name: injection_server
+    components:
+      - DataProcessor:
+          process_from_directory:
+            path: dataprocessor/process_from_directory/
+            parameters:
+              directory:
+                required: True
+                max_length: 128
+          process_from_file:
+            path: dataprocessor/process_from_file/
+            parameters:
+              file_path:
+                required: True
+                max_length: 128
+      - VSManager:
+          build_from_directory:
+            path: vsmanager/build_from_directory/
+            parameters:
+              directory:
+                required: True
+                max_length: 128
+              collection_name:
+                required: False
+                max_length: 128
+                default: "base"
+          build_from_file:
+            path: vsmanager/build_from_file/
+            parameters:
+              file_path:
+                required: True
+                max_length: 128
+              collection_name:
+                required: False
+                max_length: 128
+                default: "base"
+          add_from_directory:
+            path: vsmanager/add_from_directory/
+            parameters:
+              directory:
+                required: True
+                max_length: 128
+              collection_name:
+                required: False
+                max_length: 128
+                default: "base"
+          add_from_file:
+            path: vsmanager/add_from_file/
+            parameters:
+              file_path:
+                required: True
+                max_length: 128
+              collection_name:
+                required: False
+                max_length: 128
+                default: "base"
+      - S3FileManager:
+          upload_folders:
+            path: s3filemanager/upload_folders/
+            parameters:
+              local_path:
+                required: True
+                max_length: 128
+              prefix:
+                required: False
+                max_length: 128
+                default: ""
+          download_files:
+            path: s3filemanager/download_files/
+            parameters:
+              local_path:
+                required: True
+                max_length: 128
+          list_files:
+            path: s3filemanager/list_files/
+            parameters:
+              prefix:
+                required: True
+                max_length: 128
+          update_prefix:
+            path: s3filemanager/update_prefix/
+            parameters:
+              local_path:
+                required: True
+                max_length: 128
+              prefix:
+                required: True
+                max_length: 128
+          empty_prefix:
+            path: s3filemanager/empty_prefix/
+            parameters:
+              prefix:
+                required: True
+                max_length: 128
+
+  - name: vector_search_server
+    components:
+      - VectorStore:
+          search:
+            path: vectorstore/search/
+            parameters:
+              query:
+                required: True
+                max_length: 128
+              collection_name:
+                required: False
+                max_length: 128
+                default: "base"
+          get_nodes:
+            path: vectorstore/get_nodes/
+            parameters:
+              collection_name:
+                required: False
+                max_length: 128
+                default: "base"
+      - S3FileManager:
+          upload_folders:
+            path: s3filemanager/upload_folders/
+            parameters:
+              local_path:
+                required: True
+                max_length: 128
+              prefix:
+                required: False
+                max_length: 128
+                default: ""
+          download_files:
+            path: s3filemanager/download_files/
+            parameters:
+              local_path:
+                required: True
+                max_length: 128
+          list_files:
+            path: s3filemanager/list_files/
+            parameters:
+              prefix:
+                required: True
+                max_length: 128
+          update_prefix:
+            path: s3filemanager/update_prefix/
+            parameters:
+              local_path:
+                required: True
+                max_length: 128
+              prefix:
+                required: True
+                max_length: 128
+          empty_prefix:
+            path: s3filemanager/empty_prefix/
+            parameters:
+              prefix:
+                required: True
+                max_length: 128
+
+  - name: generation_server
+    components:
+      - LLMManager:
+          call_llm:
+            path: llmmanager/call_llm/
+            parameters:
+              sys_prompt:
+                required: True
+                max_length: 1024
+              prompt:
+                required: True
+                max_length: 8192
+              temperature:
+                required: False
+                max_length: 128
+                default: 0.5
+          call_llm_stream:
+            path: llmmanager/call_llm_stream/
+            parameters:
+              sys_prompt:
+                required: True
+                max_length: 1024
+              prompt:
+                required: True
+                max_length: 8192
+              temperature:
+                required: False
+                max_length: 128
+                default: 0.5
+          call_llm_output_json:
+            path: llmmanager/call_llm_output_json/
+            parameters:
+              sys_prompt:
+                required: True
+                max_length: 1024
+              prompt:
+                required: True
+                max_length: 8192
+              temperature:
+                required: False
+                max_length: 128
+                default: 0.5
+      - RAGGenerator:
+          rag_generate:
+            path: raggenerator/rag_generate/
+            parameters:
+              query:
+                required: True
+                max_length: 128
+          split_query:
+            path: raggenerator/split_query/
+            parameters:
+              query:
+                required: True
+                max_length: 128
+          rag_generate_split_query:
+            path: raggenerator/rag_generate_split_query/
+            parameters:
+              query:
+                required: True
+                max_length: 128
+      - S3FileManager:
+          upload_folders:
+            path: s3filemanager/upload_folders/
+            parameters:
+              local_path:
+                required: True
+                max_length: 128
+              prefix:
+                required: False
+                max_length: 128
+                default: ""
+          download_files:
+            path: s3filemanager/download_files/
+            parameters:
+              local_path:
+                required: True
+                max_length: 128
+          list_files:
+            path: s3filemanager/list_files/
+            parameters:
+              prefix:
+                required: True
+                max_length: 128
+          update_prefix:
+            path: s3filemanager/update_prefix/
+            parameters:
+              local_path:
+                required: True
+                max_length: 128
+              prefix:
+                required: True
+                max_length: 128
+          empty_prefix:
+            path: s3filemanager/empty_prefix/
+            parameters:
+              prefix:
+                required: True
+                max_length: 128
+
+  # - name: DB_server
+  #   components:
+  #     - SQLDB:
+  #         execute_query:
+  #           path: sqldb/execute_query/
+  #         insert_data:
+  #           path: sqldb/insert_data/
+  #         update_data:
+  #           path: sqldb/update_data/
+  #         delete_data:
+  #           path: sqldb/delete_data/
+  #         create_table:
+  #           path: sqldb/create_table/
+  #         get_tables:
+  #           path: sqldb/get_tables/

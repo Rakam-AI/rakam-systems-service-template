@@ -1,0 +1,3 @@
+[submodule "application/rakam_systems"]
+	path = application/rakam_systems
+	url = https://github.com/Rakam-AI/rakam_systems.git
