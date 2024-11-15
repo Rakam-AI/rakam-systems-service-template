@@ -6,7 +6,7 @@ from rakam_systems.components.vector_search.vs_manager import VSManager
 from rakam_systems.components.rag.rag_generator import RAGGenerator
 
 from rakam_systems.components.connectors.file_storage import S3FileManager
-from rakam_systems.components.connectors.LLMconnector import LLMManager
+from rakam_systems.components.connectors.LLMmanager import LLMManager
 from rakam_systems.components.connectors.DB import SQLDB
 
 base_index_path="data/vector_stores_for_test/example_baseIDXpath"
