@@ -5,10 +5,16 @@ class DataProcessorDirectorySerializer(serializers.Serializer):
 
 class DataProcessorFileSerializer(serializers.Serializer):
     file_path = serializers.CharField(required=True, max_length=1024)
+    file_uuid = serializers.CharField(required=False, max_length=1024, default=None)
 
 class VectorStoreSearchSerializer(serializers.Serializer):
     query = serializers.CharField(required=True, max_length=1024)
     collection_name = serializers.CharField(required=False, max_length=1024, default="base")
+    nodeID_filters = serializers.ListField(
+        required=False,
+        child=serializers.IntegerField(min_value=0),
+        default=[]
+    )
 
 class VectorStoreGetNodesSerializer(serializers.Serializer):
     collection_name = serializers.CharField(required=False, max_length=1024, default="base")
@@ -20,6 +26,7 @@ class VSManagerBuildFromDirectorySerializer(serializers.Serializer):
 class VSManagerBuildFromFileSerializer(serializers.Serializer):
     file_path = serializers.CharField(required=True, max_length=1024)
     collection_name = serializers.CharField(required=False, max_length=1024, default="base")
+    file_uuid = serializers.CharField(required=False, max_length=1024, default=None)
 
 class VSManagerAddFromDirectorySerializer(serializers.Serializer):
     directory = serializers.CharField(required=True, max_length=1024)
@@ -31,6 +38,12 @@ class VSManagerAddFromFileSerializer(serializers.Serializer):
 
 class RAGGenerationSerializer(serializers.Serializer):
     query = serializers.CharField(required=True, max_length=1024)
+    collection_name = serializers.CharField(required=False, max_length=1024, default="base")
+    source_file_uuids = serializers.ListField(
+        required=False,
+        child=serializers.CharField(),
+        default=[]
+    )
 
 class RAGGenerationSplitQuerySerializer(serializers.Serializer):
     query = serializers.CharField(required=True, max_length=1024)
@@ -57,18 +70,18 @@ class S3FileManagerEmptySerializer(serializers.Serializer):
 
 class LLMConnectorCallLLMSerializer(serializers.Serializer):
     sys_prompt = serializers.CharField(required=True, max_length=1024)
-    prompt = serializers.CharField(required=True, max_length=8192)
+    prompt = serializers.CharField(required=True, max_length=81920)
     temperature = serializers.FloatField(required=False, default=0)
 
 class LLMConnectorCallLLMStreamSerializer(serializers.Serializer):
     sys_prompt = serializers.CharField(required=True, max_length=1024)
-    prompt = serializers.CharField(required=True, max_length=8192)
+    prompt = serializers.CharField(required=True, max_length=81920)
     temperature = serializers.FloatField(required=False, default=0)
     seed = serializers.IntegerField(required=False, default=0)
 
 class LLMConnectorCallLLMOutputJSONSerializer(serializers.Serializer):
     sys_prompt = serializers.CharField(required=True, max_length=1024)
-    prompt = serializers.CharField(required=True, max_length=8192)
+    prompt = serializers.CharField(required=True, max_length=81920)
     temperature = serializers.FloatField(required=False, default=0)
     seed = serializers.IntegerField(required=False, default=0)
 

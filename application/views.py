@@ -99,7 +99,8 @@ def process_from_file(request):
     serializer = DataProcessorFileSerializer(data=request.data)
     if serializer.is_valid():
         file_path = serializer.validated_data.get("file_path")
-        response = components.data_processor.call_process_file(file_path=file_path)
+        file_uuid = serializer.validated_data.get("file_uuid")
+        response = components.data_processor.call_process_file(file_path=file_path, file_uuid=file_uuid)
         return Response(response, status=status.HTTP_200_OK)
     
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -135,8 +136,9 @@ def search_vector_store(request):
     if serializer.is_valid():
         collection_name = serializer.validated_data.get("collection_name") or "base"
         query = serializer.validated_data.get("query")
-        base_response = components.VS.call_main(query=query,collection_name=collection_name)
-        return Response(base_response, status=status.HTTP_200_OK)
+        nodeID_filters = serializer.validated_data.get("nodeID_filters", [])
+        base_response = components.VS.call_main(query=query,collection_name=collection_name,nodeID_filters=nodeID_filters)
+        return Response({"filter":nodeID_filters,"response":base_response}, status=status.HTTP_200_OK)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @extend_schema(
@@ -228,10 +230,11 @@ def vs_manager_build_from_file(request):
     if serializer.is_valid():
         file_path = serializer.validated_data.get("file_path")
         collection_name = serializer.validated_data.get("collection_name") or "base"
-        
+        file_uuid = serializer.validated_data.get("file_uuid")
         base_response = components.vsManager.call_create_from_file(
             file_path=file_path,
-            collection_name=collection_name
+            collection_name=collection_name,
+            file_uuid=file_uuid
         )
         
         if base_response is None:
@@ -348,7 +351,9 @@ def rag_generation(request):
     serializer = RAGGenerationSerializer(data=request.data)
     if serializer.is_valid():
         query = serializer.validated_data.get("query")
-        generated_text = components.ragGenerator.call_main(query=query)
+        collection_name = serializer.validated_data.get("collection_name") or "base"
+        source_file_uuids = serializer.validated_data.get("source_file_uuids", [])
+        generated_text = components.ragGenerator.call_main(query=query, collection_name=collection_name, source_file_uuids=source_file_uuids)
         
         return Response(generated_text, status=status.HTTP_200_OK)
     
